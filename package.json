@@ -1,0 +1,33 @@
+{
+  "name": "ave-pack",
+  "version": "0.0.1",
+  "description": "Product packer tool for Ave-Nodejs",
+  "main": "./build/index.js",
+  "bin": {
+    "ave-pack": "build/index.js"
+  },
+  "types": "build/index.d.ts",
+  "files": [
+    "build",
+    "lib"
+  ],
+  "scripts": {
+    "dev": "ts-node ./src/pack.ts",
+    "prebuild": "del-cli ./build",
+    "build": "tsc"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^17.0.21",
+    "del-cli": "^4.0.1",
+    "typescript": "^4.6.2"
+  },
+  "dependencies": {
+    "@endemolshinegroup/cosmiconfig-typescript-loader": "^3.0.2",
+    "commander": "^9.1.0",
+    "cosmiconfig": "^7.0.1",
+    "pkg": "^5.5.2",
+    "rcedit": "^3.0.1"
+  }
+}
