@@ -1,6 +1,6 @@
 {
   "name": "ave-pack",
-  "version": "0.0.1",
+  "version": "0.9.0",
   "description": "Product packer tool for Ave-Nodejs",
   "main": "./build/index.js",
   "bin": {
