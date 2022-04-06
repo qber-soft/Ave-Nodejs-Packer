@@ -69,6 +69,8 @@ export async function pack(packConfig: IPackConfig) {
     fs.renameSync(cacheExe, renamed);
   }
 
+  removeNodeAddonBackup(projectRoot);
+
   //
   const pkg = await import("pkg");
   await pkg.exec([
@@ -76,6 +78,16 @@ export async function pack(packConfig: IPackConfig) {
     ...["--target", pkgTarget],
     ...["--output", outputExe],
   ]);
+}
+
+function removeNodeAddonBackup(projectRoot: string) {
+  const backupPath = path.resolve(
+    projectRoot,
+    "./node_modules/ave-ui/lib/Avernakis-Nodejs.node.bak"
+  );
+  if (fs.existsSync(backupPath)) {
+    fs.rmSync(backupPath);
+  }
 }
 
 async function downloadCache(pkgTarget: string): Promise<string> {
