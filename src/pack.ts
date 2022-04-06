@@ -73,11 +73,20 @@ export async function pack(packConfig: IPackConfig) {
 
   //
   const pkg = await import("pkg");
-  await pkg.exec([
+  const args = [
     input,
     ...["--target", pkgTarget],
     ...["--output", outputExe],
-  ]);
+  ];
+
+  const configPath =  path.resolve(
+    projectRoot,
+    "./pkg.config.json"
+  );
+  if(fs.existsSync(configPath)) {
+    args.push(...["--config", "pkg.config.json"])
+  }
+  await pkg.exec(args);
 }
 
 function removeNodeAddonBackup(projectRoot: string) {
