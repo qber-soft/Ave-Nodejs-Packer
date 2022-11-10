@@ -108,7 +108,7 @@ async function downloadCache(pkgTarget: string): Promise<string> {
 
 function editSubsystem(exePath: string) {
   const editor = path.resolve(__dirname, "../lib/editbin/editbin.exe");
-  const args = ["/subsystem:windows", exePath].join(" ");
+  const args = ["/subsystem:windows", `"${exePath}"`].join(" ");
   const command = `"${editor}" ${args}`;
   childProcess.execSync(command);
 }
