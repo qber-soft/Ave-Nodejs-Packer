@@ -9,6 +9,8 @@ export interface IPackConfig {
     target: string;
     input: string;
     output: string;
+    debug?: boolean;
+    edit?: boolean
   };
   resource?: {
     icon?: string;
@@ -18,6 +20,7 @@ export interface IPackConfig {
     fileDescription?: string;
     productName?: string;
     LegalCopyright?: string;
+    manifest?: string
   };
 }
 
@@ -29,6 +32,8 @@ export async function pack(packConfig: IPackConfig) {
     output: outputExe,
     input,
     projectRoot,
+    debug = false,
+    edit = true
   } = buildConfig;
   const {
     icon,
@@ -38,6 +43,7 @@ export async function pack(packConfig: IPackConfig) {
     fileDescription = "",
     productName = "",
     LegalCopyright = "",
+    manifest = ""
   } = resourceConfig;
   process.env.PKG_CACHE_PATH = path.resolve(projectRoot, "./.pkg-cache");
 
@@ -59,9 +65,16 @@ export async function pack(packConfig: IPackConfig) {
     rceditOptions.icon = icon;
   }
 
+  if(manifest) {
+    rceditOptions["application-manifest"] = manifest;
+  }
+
   //
-  await rcedit(cacheExe, rceditOptions);
-  editSubsystem(cacheExe);
+  if(edit) {
+    await rcedit(cacheExe, rceditOptions);
+    editSubsystem(cacheExe, debug);
+  }
+
 
   //
   if (cacheExe.includes("fetched")) {
@@ -78,6 +91,10 @@ export async function pack(packConfig: IPackConfig) {
     ...["--target", pkgTarget],
     ...["--output", outputExe],
   ];
+  
+  if(debug) {
+    args.push("--debug");
+  }
 
   const configPath =  path.resolve(
     projectRoot,
@@ -106,9 +123,9 @@ async function downloadCache(pkgTarget: string): Promise<string> {
   return cacheName;
 }
 
-function editSubsystem(exePath: string) {
+function editSubsystem(exePath: string, debug = false) {
   const editor = path.resolve(__dirname, "../lib/editbin/editbin.exe");
-  const args = ["/subsystem:windows", `"${exePath}"`].join(" ");
+  const args = [debug ? "/subsystem:console" : "/subsystem:windows", `"${exePath}"`].join(" ");
   const command = `"${editor}" ${args}`;
   childProcess.execSync(command);
 }
