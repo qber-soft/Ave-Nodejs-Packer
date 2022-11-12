@@ -20,6 +20,7 @@ export interface IPackConfig {
     fileDescription?: string;
     productName?: string;
     LegalCopyright?: string;
+    manifest?: string
   };
 }
 
@@ -42,6 +43,7 @@ export async function pack(packConfig: IPackConfig) {
     fileDescription = "",
     productName = "",
     LegalCopyright = "",
+    manifest = ""
   } = resourceConfig;
   process.env.PKG_CACHE_PATH = path.resolve(projectRoot, "./.pkg-cache");
 
@@ -61,6 +63,10 @@ export async function pack(packConfig: IPackConfig) {
   };
   if (icon) {
     rceditOptions.icon = icon;
+  }
+
+  if(manifest) {
+    rceditOptions["application-manifest"] = manifest;
   }
 
   //
